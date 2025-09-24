@@ -4,6 +4,8 @@ namespace Yungts97\LaravelUserActivityLog\Listeners;
 
 use Yungts97\LaravelUserActivityLog\Models\Log;
 use Illuminate\Contracts\Auth\Authenticatable;
+use Illuminate\Support\Facades\Auth;
+
 
 class Listener
 {
@@ -27,13 +29,13 @@ class Listener
 
         // get the request info
         $request_info = [
-            'ip'         => request()->ip(),
-            'user_agent' => request()->userAgent()
+            'ip'         => request()->header('X-Forwarded-For') ?? request()->ip(),
+            'user_agent' => request()->userAgent(),
         ];
 
         // insert log record
         Log::create([
-            'user_id'       => auth()?->user()?->id,
+            'user_id'       => Auth::id(),
             'log_datetime'  => date('Y-m-d H:i:s'),
             'log_type'      => $this->event_name,
             'table_name'    => $this->getTableName(),
