@@ -75,7 +75,7 @@ class Listener
     private function isNotLoggableAuthenticatableModel()
     {
         $this->useLoggeduserAuthGuard();
-        if(is_null(auth()->user()))
+        if(is_null(Auth::id()))
             return true;
 
         return config('user-activity-log.user_model', '\App\Models\User') !== get_class(auth()?->user());
